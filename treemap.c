@@ -222,5 +222,28 @@ Pair * firstTreeMap(TreeMap * tree) {
 
 
 Pair * nextTreeMap(TreeMap * tree) {
-    return NULL;
+    if (tree == NULL || tree->current == NULL) return NULL;
+
+    TreeNode* node = tree->current;
+
+    // Caso 1: tiene hijo derecho → el siguiente es el menor del subárbol derecho
+    if (node->right != NULL) {
+        node = minimum(node->right);
+        tree->current = node;
+        return node->pair;
+    }
+
+    // Caso 2: no tiene hijo derecho → subir por los padres
+    TreeNode* parent = node->parent;
+    while (parent != NULL && parent->right == node) {
+        node = parent;
+        parent = parent->parent;
+    }
+
+    tree->current = parent;
+
+    if (parent == NULL) return NULL; // llegamos al final del recorrido
+
+    return parent->pair;
 }
+
