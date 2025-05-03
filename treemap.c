@@ -187,9 +187,30 @@ Pair* searchTreeMap(TreeMap* tree, void* key) {
 }
 
 
-Pair * upperBound(TreeMap * tree, void* key) {
+Pair* upperBound(TreeMap* tree, void* key){
+    TreeNode* current = tree->root;
+    TreeNode* ub_node = NULL;
+
+    while (current != NULL) {
+        if (!tree->lower_than(current->pair->key, key)) {
+            // current->key >= key → posible upper bound
+            ub_node = current;
+            current = current->left; // buscar una mejor (más pequeña)
+        }
+        else {
+            // current->key < key → seguir buscando a la derecha
+            current = current->right;
+        }
+    }
+
+    if (ub_node != NULL) {
+        tree->current = ub_node;
+        return ub_node->pair;
+    }
+
     return NULL;
 }
+
 
 Pair * firstTreeMap(TreeMap * tree) {
     if (tree == NULL || tree->root == NULL) return NULL;
